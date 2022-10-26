@@ -107,3 +107,9 @@ class ImageActor(Actor, ABC):
 
         self._surface_rect.center = self.get_location().tolist()
 
+    def copy(self):
+        new_copy = ImageActor(self._surface)
+        new_copy._surface_rect = self._surface_rect.copy()
+        new_copy._location = self.location.copy()
+        return new_copy
+
