@@ -33,17 +33,15 @@ class Player(ImageActor):
         speed = 300.
 
         self.velocity = lerp(self.velocity, speed * move_vector, delta_seconds * acceleration)
-        print(smooth_step(0, 1, delta_seconds / 2))
 
         self.set_location(self.location + self.velocity * delta_seconds)
 
         distance_to_camera = np.linalg.norm(self.get_location() - self._engine.get_camera_location())
 
-        camera_speed = 0.
-        if distance_to_camera > 50.:
+        if distance_to_camera > 300.:
             camera_speed = 20.
         else:
-            camera_speed = 8.
+            camera_speed = 3.
 
         new_camera_location = lerp(self._engine.get_camera_location(), self.get_location(), delta_seconds * camera_speed)
 
