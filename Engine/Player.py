@@ -2,12 +2,13 @@ import numpy as np
 import pygame.image
 
 from Engine.Helpers import lerp, normalize
-from Engine.MainEngine import MainEngine, ImageActor
+from Engine.MainEngine import MainEngine
+from Engine.ImageActor import ImageActor
 
 
 class Player(ImageActor):
-    def __init__(self):
-        super().__init__(pygame.image.load("res/Images/Circle.png"))
+    def __init__(self, engine: MainEngine):
+        super().__init__(engine, pygame.image.load("res/Images/Circle.png"))
         self.velocity = np.array([0., 0.])
 
         self._control_dict = {
@@ -20,8 +21,8 @@ class Player(ImageActor):
     def Start(self):
         pass
 
-    def Update(self, seconds: float, delta_seconds: float, engine: MainEngine, events: list[pygame.event]):
-        super(Player, self).Update(seconds, delta_seconds, engine, events)
+    def Update(self, seconds: float, delta_seconds: float, events: list[pygame.event]):
+        super(Player, self).Update(seconds, delta_seconds, events)
         
         self.HandleInput(events)
         move_vector = np.array([self._control_dict["right"] - self._control_dict["left"],
@@ -34,6 +35,7 @@ class Player(ImageActor):
         self.velocity = lerp(self.velocity, speed * move_vector, delta_seconds * acceleration)
 
         self.set_location(self.location + self.velocity * delta_seconds)
+        self._engine.set_camera_location(self.get_location())
 
     def HandleInput(self, events: list[pygame.event]):
         for event in events:

@@ -4,13 +4,14 @@ from copy import copy, deepcopy
 import numpy as np
 import pygame
 
-from Engine.MainEngine import Actor, MainEngine, ImageActor
+from Engine.MainEngine import Actor, MainEngine
+from Engine.ImageActor import ImageActor
 
 
 class ImageMap(Actor, ABC):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, engine: MainEngine):
+        super().__init__(engine)
         self._tiles = []
         self.z = -100;
 
@@ -31,6 +32,10 @@ class ImageMap(Actor, ABC):
         for tile in self._tiles:
             tile.Start()
 
-    def Update(self, seconds: float, delta_seconds: float, engine: MainEngine, events: list[pygame.event]):
+    def Update(self, seconds: float, delta_seconds: float, events: list[pygame.event]):
         for tile in self._tiles:
-            tile.Update(seconds, delta_seconds, engine, events)
+            tile.Update(seconds, delta_seconds, events)
+
+    def set_location(self, new_location: np.ndarray):
+        for tile in self._tiles:
+            tile.set_location(tile.get_location())
