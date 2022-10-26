@@ -27,7 +27,6 @@ class ImageActor(Actor, ABC):
 
         relative_to_camera_location = self.get_location() - self._engine.get_camera_location() + np.array(self._engine.get_resolution()) / 2.
 
-        print(self._surface.get_rect())
         self._surface_rect.center = relative_to_camera_location.tolist()
 
     def copy(self):

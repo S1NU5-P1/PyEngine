@@ -1,7 +1,7 @@
 import numpy as np
 import pygame.image
 
-from Engine.Helpers import lerp, normalize
+from Engine.Helpers import lerp, normalize, smooth_step
 from Engine.MainEngine import MainEngine
 from Engine.ImageActor import ImageActor
 
@@ -33,9 +33,21 @@ class Player(ImageActor):
         speed = 300.
 
         self.velocity = lerp(self.velocity, speed * move_vector, delta_seconds * acceleration)
+        print(smooth_step(0, 1, delta_seconds / 2))
 
         self.set_location(self.location + self.velocity * delta_seconds)
-        self._engine.set_camera_location(self.get_location())
+
+        distance_to_camera = np.linalg.norm(self.get_location() - self._engine.get_camera_location())
+
+        camera_speed = 0.
+        if distance_to_camera > 50.:
+            camera_speed = 20.
+        else:
+            camera_speed = 8.
+
+        new_camera_location = lerp(self._engine.get_camera_location(), self.get_location(), delta_seconds * camera_speed)
+
+        self._engine.set_camera_location(new_camera_location)
 
     def HandleInput(self, events: list[pygame.event]):
         for event in events:
