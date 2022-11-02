@@ -4,6 +4,7 @@ from Engine.ImageActor import ImageActor
 from Engine.ImageMap import ImageMap
 from Engine.MainEngine import MainEngine
 from Engine.Player import Player
+from Engine.PlayerTwo import PlayerTwo
 
 
 def main():
@@ -15,6 +16,7 @@ def main():
     }
 
     engine.RegisterActor(Player(engine))
+    engine.RegisterActor(PlayerTwo(engine))
 
     image_map = ImageMap(engine)
     image_map.LoadMap("res/map", tile_dict)

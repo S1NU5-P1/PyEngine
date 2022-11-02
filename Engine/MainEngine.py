@@ -45,7 +45,7 @@ class MainEngine:
 
             fps_font = pygame.font.SysFont("", 24)
             fps_image = fps_font.render(f"fps: {round(1 / delta_seconds)}", True, (0., 255., 0.))
-            self.screen.blit(fps_image, (5, 5))
+            # self.screen.blit(fps_image, (5, 5))
 
             pygame.display.update()
 
