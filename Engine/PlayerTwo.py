@@ -5,23 +5,25 @@ from Engine.Player import Player
 
 class PlayerTwo(Player):
     def HandleInput(self, events: list[pygame.event]):
-        for event in events:
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_w:
-                    self._control_dict["up"] = 1.
-                if event.key == pygame.K_s:
-                    self._control_dict["down"] = 1.
-                if event.key == pygame.K_a:
-                    self._control_dict["left"] = 1.
-                if event.key == pygame.K_d:
-                    self._control_dict["right"] = 1.
+        analog = [self._engine.gamepad.get_axis(0), self._engine.gamepad.get_axis(1)]
+        if abs(analog[0]) > 0.4:
+            if analog[0] > 0:
+                self._control_dict["right"] = analog[0]
+                self._control_dict["left"] = 0
+            elif analog[0] < 0:
+                self._control_dict["left"] = -analog[0]
+                self._control_dict["right"] = 0
+        else:
+            self._control_dict["left"] = 0
+            self._control_dict["right"] = 0
 
-            elif event.type == pygame.KEYUP:
-                if event.key == pygame.K_w:
-                    self._control_dict["up"] = 0.
-                if event.key == pygame.K_s:
-                    self._control_dict["down"] = 0.
-                if event.key == pygame.K_a:
-                    self._control_dict["left"] = 0.
-                if event.key == pygame.K_d:
-                    self._control_dict["right"] = 0.
+        if abs(analog[1]) > 0.4:
+            if analog[1] > 0:
+                self._control_dict["down"] = analog[1]
+                self._control_dict["up"] = 0
+            elif analog[1] < 0:
+                self._control_dict["up"] = -analog[1]
+                self._control_dict["down"] = 0
+        else:
+            self._control_dict["up"] = 0
+            self._control_dict["down"] = 0

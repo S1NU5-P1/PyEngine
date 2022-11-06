@@ -20,6 +20,9 @@ class MainEngine:
         self._camera_scale = 1.;
         pygame.display.set_caption("PyEngine")
 
+        pygame.joystick.init()
+        self.gamepad = pygame.joystick.Joystick(0)
+
     def MainLoop(self):
         should_exit = False
 
