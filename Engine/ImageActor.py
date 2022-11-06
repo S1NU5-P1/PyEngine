@@ -26,9 +26,10 @@ class ImageActor(Actor, ABC):
                 self._surface_rect.top < -size_y:
             return
 
-        scale = round(33 * self._engine.get_camera_scale())
+        scale_x = np.ceil(32 * self._engine.get_camera_scale())
+        scale_y = np.ceil(32 * self._engine.get_camera_scale())
 
-        scaled_surface = pygame.transform.scale(self._surface, (scale, scale))
+        scaled_surface = pygame.transform.scale(self._surface, (scale_x, scale_y))
         self._engine.screen.blit(scaled_surface, self._surface_rect)
 
     def get_location(self):
