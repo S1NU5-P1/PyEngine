@@ -13,7 +13,7 @@ class ImageMap(Actor, ABC):
     def __init__(self, engine: MainEngine):
         super().__init__(engine)
         self._tiles = []
-        self.z = -100;
+        self.z = -100
 
     def LoadMap(self, path: str, tile_dict: dict[str, ImageActor], tile_x=32, tile_y=32):
         with open(path) as map_file:

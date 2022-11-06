@@ -1,5 +1,6 @@
 import pygame
 
+from Engine.CoopCamera import CoopCamera
 from Engine.ImageActor import ImageActor
 from Engine.ImageMap import ImageMap
 from Engine.MainEngine import MainEngine
@@ -15,8 +16,13 @@ def main():
         "*": ImageActor(engine, pygame.image.load("res/Images/Floor.png"))
     }
 
-    engine.RegisterActor(Player(engine))
-    engine.RegisterActor(PlayerTwo(engine))
+    player_one = Player(engine)
+    player_two = PlayerTwo(engine)
+    camera = CoopCamera(player_one, player_two, engine)
+
+    engine.RegisterActor(player_one)
+    engine.RegisterActor(player_two)
+    engine.RegisterActor(camera)
 
     image_map = ImageMap(engine)
     image_map.LoadMap("res/map", tile_dict)

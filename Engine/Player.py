@@ -16,6 +16,8 @@ class Player(ImageActor):
             "down": 0.,
             "left": 0.,
             "right": 0.,
+            "scale_plus": 0.,
+            "scale_minus": 0.,
         }
 
     def Start(self):
@@ -36,17 +38,6 @@ class Player(ImageActor):
 
         self.set_location(self.location + self.velocity * delta_seconds)
 
-        distance_to_camera = np.linalg.norm(self.get_location() - self._engine.get_camera_location())
-
-        if distance_to_camera > 300.:
-            camera_speed = 20.
-        else:
-            camera_speed = 3.
-
-        new_camera_location = lerp(self._engine.get_camera_location(), self.get_location(), delta_seconds * camera_speed)
-
-        self._engine.set_camera_location(new_camera_location)
-
     def HandleInput(self, events: list[pygame.event]):
         for event in events:
             if event.type == pygame.KEYDOWN:
@@ -58,6 +49,10 @@ class Player(ImageActor):
                     self._control_dict["left"] = 1.
                 if event.key == pygame.K_RIGHT:
                     self._control_dict["right"] = 1.
+                if event.key == pygame.K_0:
+                    self._control_dict["scale_plus"] = 1.
+                if event.key == pygame.K_9:
+                    self._control_dict["scale_minus"] = 1.
 
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_UP:
@@ -68,3 +63,8 @@ class Player(ImageActor):
                     self._control_dict["left"] = 0.
                 if event.key == pygame.K_RIGHT:
                     self._control_dict["right"] = 0.
+                if event.key == pygame.K_0:
+                    self._control_dict["scale_plus"] = 0.
+                if event.key == pygame.K_9:
+                    self._control_dict["scale_minus"] = 0.
+

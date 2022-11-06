@@ -17,6 +17,7 @@ class MainEngine:
         self.screen = pygame.display.set_mode(self._resolution)
         self._ActorList: list[Actor] = []
         self._camera_location = np.array([0., 0.])
+        self._camera_scale = 1.;
         pygame.display.set_caption("PyEngine")
 
     def MainLoop(self):
@@ -61,6 +62,15 @@ class MainEngine:
 
     def set_camera_location(self, camera):
         self._camera_location = camera
+
+        for actor in self._ActorList:
+            actor.set_location(actor.get_location())
+
+    def get_camera_scale(self):
+        return self._camera_scale
+
+    def set_camera_scale(self, scale):
+        self._camera_scale = scale
 
         for actor in self._ActorList:
             actor.set_location(actor.get_location())
