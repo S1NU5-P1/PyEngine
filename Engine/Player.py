@@ -8,7 +8,7 @@ from Engine.ImageActor import ImageActor
 
 class Player(ImageActor):
     def __init__(self, engine: MainEngine):
-        super().__init__(engine, pygame.image.load("res/Images/Circle.png"))
+        super().__init__(engine, pygame.image.load("res/Images/Keyboard.png"))
         self.velocity = np.array([0., 0.])
 
         self._control_dict = {

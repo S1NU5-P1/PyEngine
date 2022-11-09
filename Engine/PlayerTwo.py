@@ -1,9 +1,16 @@
 import pygame.event
 
+from Engine.MainEngine import MainEngine
 from Engine.Player import Player
 
 
 class PlayerTwo(Player):
+
+    def __init__(self, engine: MainEngine):
+        super().__init__(engine)
+        self._surface = pygame.image.load("res/Images/Gamepad.png")
+        self._surface_rect = self._surface.get_rect()
+
     def HandleInput(self, events: list[pygame.event]):
         analog = [self._engine.gamepad.get_axis(0), self._engine.gamepad.get_axis(1)]
         if abs(analog[0]) > 0.4:
