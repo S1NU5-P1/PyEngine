@@ -16,12 +16,9 @@ class MainEngine:
         self._resolution = [640, 480]
         self.screen = pygame.display.set_mode(self._resolution)
         self._ActorList: list[Actor] = []
-        self._camera_location = np.array([0., 0.])
-        self._camera_scale = 1.;
+        self._camera_location = np.array(self._resolution) / 2.
+        self._camera_scale = 1.
         pygame.display.set_caption("PyEngine")
-
-        pygame.joystick.init()
-        self.gamepad = pygame.joystick.Joystick(0)
 
     def MainLoop(self):
         should_exit = False
@@ -49,7 +46,7 @@ class MainEngine:
 
             fps_font = pygame.font.SysFont("", 24)
             fps_image = fps_font.render(f"fps: {round(1 / delta_seconds)}", True, (0., 255., 0.))
-            # self.screen.blit(fps_image, (5, 5))
+            self.screen.blit(fps_image, (5, 5))
 
             pygame.display.update()
 
@@ -77,6 +74,9 @@ class MainEngine:
 
         for actor in self._ActorList:
             actor.set_location(actor.get_location())
+
+    def get_actor_list(self):
+        return self._ActorList
 
 
 class Actor(ABC):
