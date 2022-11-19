@@ -25,8 +25,14 @@ class CircleActor(ImageActor):
         self.set_location(new_location)
 
         collided_actors = self.detect_collisions()
-        for collided_actor in collided_actors:
-            self.apply_separation(collided_actor)
+
+        if self._engine.is_separation_active:
+            for collided_actor in collided_actors:
+                self.apply_separation(collided_actor)
+
+        if self._engine.is_bouncing_active:
+            for collided_actor in collided_actors:
+                self.bounce(collided_actor)
 
     def detect_collisions(self):
         collided_actors = []
@@ -72,3 +78,9 @@ class CircleActor(ImageActor):
         elif self.get_location()[1] - self._radius < 0:
             if self._velocity[1] < 1:
                 self._velocity[1] = -self._velocity[1]
+
+    def bounce(self, collided_actor):
+        separation_vector = Helpers.normalize(self.calculate_circle_separation_vector(collided_actor))
+
+        self._velocity = self._velocity - 2 * np.dot(separation_vector, self._velocity) * separation_vector
+        collided_actor._velocity = collided_actor._velocity - 2 * np.dot(-separation_vector, collided_actor._velocity) * -separation_vector
