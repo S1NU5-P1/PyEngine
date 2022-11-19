@@ -1,6 +1,9 @@
+import math
+
 import numpy as np
 import pygame
 
+import Engine.Helpers as Helpers
 from Engine.MainEngine import MainEngine, Actor
 from Engine.ImageActor import ImageActor
 
@@ -29,11 +32,11 @@ class CircleActor(ImageActor):
         collided_actors = []
         for another_actor in self._engine.get_actor_list():
             if isinstance(another_actor, CircleActor) and another_actor is not self:
-                distance = np.linalg.norm(self.get_location() - another_actor.get_location())
+                distance = Helpers.distance(self.get_location() - another_actor.get_location())
                 if distance < self._radius + another_actor._radius:
                     collided_actors.append(another_actor)
 
-        return collided_actors;
+        return collided_actors
 
     def apply_separation(self, another_actor):
         separation_vector = self.calculate_circle_separation_vector(another_actor)
@@ -45,19 +48,27 @@ class CircleActor(ImageActor):
 
     def calculate_circle_separation_vector(self, another_actor):
         result = self.get_location() - another_actor.get_location()
-        circle_distance = np.linalg.norm(result)
+        circle_distance = Helpers.distance(result)
 
-        if np.linalg.norm(result) == 0:
+        if circle_distance == 0:
             return np.array([0, 0])
 
         result /= circle_distance
         return result * (self._radius + another_actor._radius - circle_distance)
 
     def collide_with_screen_borders(self):
-        if self.get_location()[0] + self._radius >= self._engine.get_resolution()[0] or \
-                self.get_location()[0] - self._radius < 0:
-            self._velocity[0] = -self._velocity[0]
+        if self.get_location()[0] + self._radius >= self._engine.get_resolution()[0]:
+            if self._velocity[0] > 0:
+                self._velocity[0] = -self._velocity[0]
 
-        if self.get_location()[1] + self._radius >= self._engine.get_resolution()[1] or \
-                self.get_location()[1] - self._radius < 0:
-            self._velocity[1] = -self._velocity[1]
+        elif self.get_location()[0] - self._radius < 0:
+            if self._velocity[0] < 0:
+                self._velocity[0] = -self._velocity[0]
+
+        if self.get_location()[1] + self._radius >= self._engine.get_resolution()[1]:
+            if self._velocity[1] > 0:
+                self._velocity[1] = -self._velocity[1]
+
+        elif self.get_location()[1] - self._radius < 0:
+            if self._velocity[1] < 1:
+                self._velocity[1] = -self._velocity[1]

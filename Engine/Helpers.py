@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 
 
@@ -22,8 +24,12 @@ def smooth_step(a, b, t):
     return lerp(a, b, lerp(t1, t2, t))
 
 
+def distance(v: np.ndarray):
+    return math.sqrt(v[0] ** 2 + v[1] ** 2)
+
+
 def normalize(v: np.ndarray):
-    norm = np.linalg.norm(v)
+    norm = distance(v)
     if norm == 0:
         return v
     return v / norm

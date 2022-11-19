@@ -1,6 +1,7 @@
 import numpy as np
 import pygame
 
+from Engine import Helpers
 from Engine.Helpers import lerp
 from Engine.MainEngine import Actor, MainEngine
 from Engine.Player import Player
@@ -24,11 +25,5 @@ class CoopCamera(Actor):
                                        camera_resolution[1] * (self._engine.get_camera_scale() - 1)])
 
         new_camera_location = lerp(self._engine.get_camera_location(), point_of_interest, delta_seconds * camera_speed)
-        target_camera_scale = np.linalg.norm(self.player_one.get_location() - self.player_two.get_location()) / 300
-        target_camera_scale = max(1, target_camera_scale)
-        target_camera_scale = 1 / target_camera_scale
-
-        new_camera_scale = lerp(self._engine.get_camera_scale(), target_camera_scale, delta_seconds * camera_speed)
 
         self._engine.set_camera_location(new_camera_location)
-        self._engine.set_camera_scale(new_camera_scale)
