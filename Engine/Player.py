@@ -1,14 +1,14 @@
 import numpy as np
 import pygame.image
 
-from Engine.Helpers import lerp, normalize, smooth_step
-from Engine.MainEngine import MainEngine
+from Engine.Helpers import lerp, normalize
 from Engine.ImageActor import ImageActor
+from Engine.MainEngine import MainEngine
 
 
 class Player(ImageActor):
     def __init__(self, engine: MainEngine):
-        super().__init__(engine, pygame.image.load("res/Images/Keyboard.png"))
+        super().__init__(engine, pygame.image.load("res/Images/Square.png"))
         self.velocity = np.array([0., 0.])
 
         self._control_dict = {
@@ -41,30 +41,22 @@ class Player(ImageActor):
     def HandleInput(self, events: list[pygame.event]):
         for event in events:
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:
+                if event.key == pygame.K_w:
                     self._control_dict["up"] = 1.
-                if event.key == pygame.K_DOWN:
+                if event.key == pygame.K_s:
                     self._control_dict["down"] = 1.
-                if event.key == pygame.K_LEFT:
+                if event.key == pygame.K_a:
                     self._control_dict["left"] = 1.
-                if event.key == pygame.K_RIGHT:
+                if event.key == pygame.K_d:
                     self._control_dict["right"] = 1.
-                if event.key == pygame.K_0:
-                    self._control_dict["scale_plus"] = 1.
-                if event.key == pygame.K_9:
-                    self._control_dict["scale_minus"] = 1.
 
             elif event.type == pygame.KEYUP:
-                if event.key == pygame.K_UP:
+                if event.key == pygame.K_w:
                     self._control_dict["up"] = 0.
-                if event.key == pygame.K_DOWN:
+                if event.key == pygame.K_s:
                     self._control_dict["down"] = 0.
-                if event.key == pygame.K_LEFT:
+                if event.key == pygame.K_a:
                     self._control_dict["left"] = 0.
-                if event.key == pygame.K_RIGHT:
+                if event.key == pygame.K_d:
                     self._control_dict["right"] = 0.
-                if event.key == pygame.K_0:
-                    self._control_dict["scale_plus"] = 0.
-                if event.key == pygame.K_9:
-                    self._control_dict["scale_minus"] = 0.
 

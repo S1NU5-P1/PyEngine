@@ -19,7 +19,6 @@ class CircleActor(ImageActor):
 
     def Update(self, seconds: float, delta_seconds: float, events: list[pygame.event]):
         super().Update(seconds, delta_seconds, events)
-        self.collide_with_screen_borders()
 
         new_location = self.get_location() + self._velocity * delta_seconds
         self.set_location(new_location)
