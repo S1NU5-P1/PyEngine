@@ -2,11 +2,11 @@ import numpy as np
 import pygame.image
 
 from Engine.Helpers import lerp, normalize
-from Engine.ImageActor import ImageActor
 from Engine.MainEngine import MainEngine
+from Engine.SquareActor import SquareActor
 
 
-class Player(ImageActor):
+class Player(SquareActor):
     def __init__(self, engine: MainEngine):
         super().__init__(engine, pygame.image.load("res/Images/Square.png"))
         self.velocity = np.array([0., 0.])
@@ -19,6 +19,8 @@ class Player(ImageActor):
             "scale_plus": 0.,
             "scale_minus": 0.,
         }
+
+        self.is_static = False
 
     def Start(self):
         pass
@@ -35,6 +37,9 @@ class Player(ImageActor):
         speed = 300.
 
         self.velocity = lerp(self.velocity, speed * move_vector, delta_seconds * acceleration)
+
+        for collided_actor in self.collided_actors_this_frame:
+            self.apply_separation(collided_actor)
 
         self.set_location(self.location + self.velocity * delta_seconds)
 

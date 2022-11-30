@@ -48,7 +48,7 @@ class ImageActor(Actor, ABC):
 
         self._surface_rect.center = relative_to_camera_location.tolist()
 
-    def copy(self):
+    def __deepcopy__(self, memodict={}):
         new_copy = ImageActor(self._engine, self._surface)
         new_copy._surface_rect = self._surface_rect.copy()
         new_copy._location = self.location.copy()

@@ -1,11 +1,13 @@
+import copy
+import random
 from abc import ABC
-from copy import copy, deepcopy
 
 import numpy as np
 import pygame
 
 from Engine.MainEngine import Actor, MainEngine
 from Engine.ImageActor import ImageActor
+from Engine.SquareActor import SquareActor
 
 
 class ImageMap(Actor, ABC):
@@ -22,20 +24,33 @@ class ImageMap(Actor, ABC):
                     if character == "\n":
                         continue
 
-                    new_tile: ImageActor = tile_dict[character].copy()
+                    new_tile: SquareActor = copy.deepcopy(tile_dict[character])
                     new_tile.z = self.z
-                    new_tile.set_location(np.array([tile_x * character_number + tile_x / 2,
-                                                    tile_y * line_number + tile_y / 2]))
+                    new_location = np.array([tile_x * character_number + tile_x / 2., tile_y * line_number + tile_y / 2.])
+                    new_tile.set_location(new_location)
                     self._tiles.append(new_tile)
+                    self._engine.RegisterActor(new_tile)
 
     def Start(self):
-        for tile in self._tiles:
-            tile.Start()
+        pass
 
     def Update(self, seconds: float, delta_seconds: float, events: list[pygame.event]):
-        for tile in self._tiles:
-            tile.Update(seconds, delta_seconds, events)
+        pass
 
     def set_location(self, new_location: np.ndarray):
         for tile in self._tiles:
             tile.set_location(tile.get_location())
+
+    def find_tile(self, path: str, target_character=' '):
+        found_tiles_locations = []
+
+        with open(path) as map_file:
+            for line_number, line in enumerate(map_file.readlines()):
+                for character_number, character in enumerate(line):
+                    if character == "\n":
+                        continue
+
+                    if character == target_character:
+                        found_tiles_locations.append(np.array([character_number, line_number]))
+
+        return random.choice(found_tiles_locations)

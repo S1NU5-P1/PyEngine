@@ -19,9 +19,6 @@ class MainEngine:
         self._camera_location = np.array(self._resolution) / 2.
         self._camera_scale = 1.
 
-        self.is_separation_active = True
-        self.is_bouncing_active = True
-
         pygame.display.set_caption("PyEngine")
 
     def MainLoop(self):
@@ -51,19 +48,6 @@ class MainEngine:
             fps_font = pygame.font.SysFont("", 24)
             fps_image = fps_font.render(f"fps: {round(1 / delta_seconds)}", True, (0., 255., 0.))
             self.screen.blit(fps_image, (5, 5))
-
-            hud_image = fps_font.render(f"Bounce: {self.is_bouncing_active}", True, (0., 255., 0.))
-            self.screen.blit(hud_image, (5, 28))
-
-            hud_image = fps_font.render(f"Separation: {self.is_separation_active}", True, (0., 255., 0.))
-            self.screen.blit(hud_image, (5, 50))
-
-            for event in this_frame_events:
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_1:
-                        self.is_bouncing_active = not self.is_bouncing_active
-                    if event.key == pygame.K_2:
-                        self.is_separation_active = not self.is_separation_active
 
             pygame.display.update()
 

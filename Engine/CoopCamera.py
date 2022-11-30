@@ -23,7 +23,6 @@ class CoopCamera(Actor):
         camera_speed = 10.
         new_camera_location = lerp(self._engine.get_camera_location(), point_of_interest,
                                    delta_seconds * camera_speed)
-        print()
         camera_resolution = self._engine.get_resolution()
         point_of_interest += np.array([camera_resolution[0] * (self._engine.get_camera_scale() - 1),
                                        camera_resolution[1] * (self._engine.get_camera_scale() - 1)])

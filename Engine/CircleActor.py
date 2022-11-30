@@ -11,8 +11,8 @@ from Engine.ImageActor import ImageActor
 class CircleActor(ImageActor):
     def __init__(self, engine: MainEngine):
         super().__init__(engine, pygame.image.load("res/Images/Circle.png"))
+        self.collided_actors_this_frame = []
         self._radius = 16.
-        self._velocity = np.array([0., 0.])
 
     def Start(self):
         super().Start()
@@ -23,15 +23,7 @@ class CircleActor(ImageActor):
         new_location = self.get_location() + self._velocity * delta_seconds
         self.set_location(new_location)
 
-        collided_actors = self.detect_collisions()
-
-        if self._engine.is_separation_active:
-            for collided_actor in collided_actors:
-                self.apply_separation(collided_actor)
-
-        if self._engine.is_bouncing_active:
-            for collided_actor in collided_actors:
-                self.bounce(collided_actor)
+        self.collided_actors_this_frame = self.detect_collisions()
 
     def detect_collisions(self):
         collided_actors = []
@@ -60,23 +52,6 @@ class CircleActor(ImageActor):
 
         result /= circle_distance
         return result * (self._radius + another_actor._radius - circle_distance)
-
-    def collide_with_screen_borders(self):
-        if self.get_location()[0] + self._radius >= self._engine.get_resolution()[0]:
-            if self._velocity[0] > 0:
-                self._velocity[0] = -self._velocity[0]
-
-        elif self.get_location()[0] - self._radius < 0:
-            if self._velocity[0] < 0:
-                self._velocity[0] = -self._velocity[0]
-
-        if self.get_location()[1] + self._radius >= self._engine.get_resolution()[1]:
-            if self._velocity[1] > 0:
-                self._velocity[1] = -self._velocity[1]
-
-        elif self.get_location()[1] - self._radius < 0:
-            if self._velocity[1] < 1:
-                self._velocity[1] = -self._velocity[1]
 
     def bounce(self, collided_actor):
         separation_vector = Helpers.normalize(self.calculate_circle_separation_vector(collided_actor))
