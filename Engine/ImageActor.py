@@ -35,16 +35,13 @@ class ImageActor(Actor, ABC):
         scaled_surface = pygame.transform.scale(self._surface, (scale_x, scale_y))
         self._engine.screen.blit(scaled_surface, self._surface_rect)
 
-    def get_location(self):
-        return super().get_location()
-
     def set_location(self, new_location: np.ndarray):
         super().set_location(new_location)
 
         relative_to_camera_location: np.ndarray = self.get_location() - self._engine.get_camera_location() + np.array(
             self._engine.get_resolution()) / 2.
 
-        relative_to_camera_location = relative_to_camera_location.transpose().dot(np.identity(2) * self._engine.get_camera_scale())
+        # relative_to_camera_location = relative_to_camera_location.transpose().dot(np.identity(2) * self._engine.get_camera_scale())
 
         self._surface_rect.center = relative_to_camera_location.tolist()
 

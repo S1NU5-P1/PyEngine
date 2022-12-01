@@ -1,6 +1,9 @@
 import numpy as np
 import pygame
 
+from Engine.ArrowActor import ArrowActor
+from Engine.CircleActor import CircleActor
+from Engine.CoinActor import CoinActor
 from Engine.CoopCamera import CoopCamera
 from Engine.ImageActor import ImageActor
 from Engine.ImageMap import ImageMap
@@ -18,7 +21,7 @@ def main():
     }
 
     tile_map = ImageMap(engine)
-    tile_map.LoadMap("res/map", tile_dict)
+    tile_map.LoadMap("res/map1", tile_dict)
     engine.RegisterActor(tile_map)
 
     player_one = Player(engine)
@@ -29,11 +32,19 @@ def main():
     engine.RegisterActor(player_two)
     engine.RegisterActor(camera)
 
-    location = 32 * tile_map.find_tile("res/map") + np.array([16, 16])
+    location = 32 * tile_map.find_tile("res/map1") + np.array([16, 16])
     player_one.set_location(np.array(location))
 
-    location = 32 * tile_map.find_tile("res/map") + np.array([16, 16])
+    location = 32 * tile_map.find_tile("res/map1") + np.array([16, 16])
     player_two.set_location(location)
+
+    location = 32 * tile_map.find_tile("res/map1") + np.array([16, 16])
+    coin = CoinActor(engine)
+    coin.set_location(location)
+    engine.RegisterActor(coin)
+
+    arrow = ArrowActor(engine, coin)
+    engine.RegisterActor(arrow)
 
     engine.MainLoop()
 
