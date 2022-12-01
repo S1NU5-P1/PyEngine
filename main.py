@@ -7,7 +7,7 @@ from Engine.ImageMap import ImageMap
 from Engine.MainEngine import MainEngine
 from Engine.ImageActor import ImageActor
 from Engine.Player import Player
-from Engine.PlayerTwo import PlayerTwo
+from Engine.PlayerTwo import CirclePlayer
 from Engine.CoopCamera import CoopCamera
 from Engine.SquareActor import SquareActor
 
@@ -24,7 +24,7 @@ def main():
     engine.RegisterActor(tile_map)
 
     player_one = Player(engine)
-    player_two = PlayerTwo(engine)
+    player_two = CirclePlayer(engine)
     camera = CoopCamera(player_one, player_two, engine)
 
     engine.RegisterActor(player_one)

@@ -1,15 +1,51 @@
-import pygame.event
+import numpy as np
+import pygame.image
 
+from Engine.Helpers import lerp, normalize
 from Engine.MainEngine import MainEngine
-from Engine.Player import Player
+from Engine.CircleActor import CircleActor
 
 
-class PlayerTwo(Player):
-
+class CirclePlayer(CircleActor):
     def __init__(self, engine: MainEngine):
-        super().__init__(engine)
-        self._surface = pygame.image.load("res/Images/Circle.png")
-        self._surface_rect = self._surface.get_rect()
+        super().__init__(engine, pygame.image.load("res/Images/Circle.png"), 8)
+        self.velocity = np.array([0., 0.])
+
+        self._control_dict = {
+            "up": 0.,
+            "down": 0.,
+            "left": 0.,
+            "right": 0.,
+            "scale_plus": 0.,
+            "scale_minus": 0.,
+        }
+
+        self.is_static = False
+
+    def Start(self):
+        pass
+
+    def Update(self, seconds: float, delta_seconds: float, events: list[pygame.event]):
+        super(CirclePlayer, self).Update(seconds, delta_seconds, events)
+
+        self.HandleInput(events)
+        move_vector = np.array([self._control_dict["right"] - self._control_dict["left"],
+                                self._control_dict["down"] - self._control_dict["up"]])
+        move_vector = normalize(move_vector)
+
+        acceleration = 10.
+        speed = 300.
+
+        self.velocity = lerp(self.velocity, speed * move_vector, delta_seconds * acceleration)
+        self.set_location(self.location + self.velocity * delta_seconds)
+
+        for collided_actor in self.collided_actors_this_frame:
+            self.apply_separation(collided_actor)
+
+
+    def apply_separation(self, another_actor):
+        super().apply_separation(another_actor)
+        self.velocity = np.array([0., 0.])
 
     def HandleInput(self, events: list[pygame.event]):
         for event in events:

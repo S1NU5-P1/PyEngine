@@ -37,11 +37,14 @@ class Player(SquareActor):
         speed = 300.
 
         self.velocity = lerp(self.velocity, speed * move_vector, delta_seconds * acceleration)
+        self.set_location(self.location + self.velocity * delta_seconds)
 
         for collided_actor in self.collided_actors_this_frame:
             self.apply_separation(collided_actor)
 
-        self.set_location(self.location + self.velocity * delta_seconds)
+    def apply_separation(self, another_actor):
+        super().apply_separation(another_actor)
+        self.velocity = np.array([0., 0.])
 
     def HandleInput(self, events: list[pygame.event]):
         for event in events:

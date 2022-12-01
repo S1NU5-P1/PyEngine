@@ -4,6 +4,11 @@ import numpy as np
 
 
 def clamp(x, minimum, maximum):
+    if minimum > maximum:
+        temp = maximum
+        maximum = minimum
+        minimum = temp
+
     if x > maximum:
         return maximum
     elif x < minimum:
