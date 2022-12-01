@@ -1,14 +1,12 @@
-import math
-import random
-
 import numpy as np
 import pygame
+
+from Engine.CoopCamera import CoopCamera
+from Engine.ImageActor import ImageActor
 from Engine.ImageMap import ImageMap
 from Engine.MainEngine import MainEngine
-from Engine.ImageActor import ImageActor
 from Engine.Player import Player
 from Engine.PlayerTwo import CirclePlayer
-from Engine.CoopCamera import CoopCamera
 from Engine.SquareActor import SquareActor
 
 

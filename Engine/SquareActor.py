@@ -1,12 +1,10 @@
 import copy
-import math
 
 import numpy as np
 import pygame
 
-import Engine.Helpers as Helpers
-from Engine.MainEngine import MainEngine, Actor
 from Engine.ImageActor import ImageActor
+from Engine.MainEngine import MainEngine
 
 
 class SquareActor(ImageActor):
@@ -27,27 +25,11 @@ class SquareActor(ImageActor):
         if self.is_static:
             return
 
-        self_width = self._surface_rect.right - self._surface_rect.left
-        self_height = self._surface_rect.bottom - self._surface_rect.top
-
-        left1 = self.get_location()[0] - self_width / 2
-        right1 = self.get_location()[0] + self_width / 2
-        top1 = self.get_location()[1] - self_height / 2
-        bottom1 = self.get_location()[1] + self_height / 2
-
         collided_actors = []
         for another_actor in self._engine.get_actor_list():
             if isinstance(another_actor, SquareActor) and another_actor is not self:
-                another_width = another_actor._surface_rect.right - another_actor._surface_rect.left
-                another_height = another_actor._surface_rect.bottom - another_actor._surface_rect.top
-
-                left2 = another_actor.get_location()[0] - another_width / 2
-                right2 = another_actor.get_location()[0] + another_width / 2
-                top2 = another_actor.get_location()[1] - another_height / 2
-                bottom2 = another_actor.get_location()[1] + another_height / 2
-
-                if right1 > left2 and right2 > left1 and \
-                        bottom1 > top2 and bottom2 > top1:
+                if self.get_right() > another_actor.get_left() and another_actor.get_right() > self.get_left() and \
+                        self.get_bottom() > another_actor.get_top() and another_actor.get_bottom() > self.get_top():
                     collided_actors.append(another_actor)
 
         return collided_actors
@@ -58,38 +40,13 @@ class SquareActor(ImageActor):
         self.set_location(new_position)
 
     def calculate_separation_vector(self, another_actor):
-        self_width = self._surface_rect.right - self._surface_rect.left
-        self_height = self._surface_rect.bottom - self._surface_rect.top
+        left = self.get_right() - another_actor.get_left()
+        right = another_actor.get_right() - self.get_left()
+        top = self.get_bottom() - another_actor.get_top()
+        bottom = another_actor.get_bottom() - self.get_top()
 
-        another_width = another_actor._surface_rect.right - another_actor._surface_rect.left
-        another_height = another_actor._surface_rect.bottom - another_actor._surface_rect.top
-
-        left1 = self.get_location()[0] - self_width / 2
-        right1 = self.get_location()[0] + self_width / 2
-        top1 = self.get_location()[1] - self_height / 2
-        bottom1 = self.get_location()[1] + self_height / 2
-
-        left2 = another_actor.get_location()[0] - another_width / 2
-        right2 = another_actor.get_location()[0] + another_width / 2
-        top2 = another_actor.get_location()[1] - another_height / 2
-        bottom2 = another_actor.get_location()[1] + another_height / 2
-
-        left = right1 - left2
-        right = right2 - left1
-        top = bottom1 - top2
-        bottom = bottom2 - top1
-
-        x = 0
-        if left < right:
-            x = -left
-        else:
-            x = right
-
-        y = 0
-        if top < bottom:
-            y = -top
-        else:
-            y = bottom
+        x = min([-left, right], key=abs)
+        y = min([-top, bottom], key=abs)
 
         if abs(x) > abs(y):
             x = 0
@@ -98,33 +55,27 @@ class SquareActor(ImageActor):
 
         return np.array([x, y])
 
-    def collide_with_screen_borders(self):
-        if self.get_location()[0] + self._radius >= self._engine.get_resolution()[0]:
-            if self._velocity[0] > 0:
-                self._velocity[0] = -self._velocity[0]
-
-        elif self.get_location()[0] - self._radius < 0:
-            if self._velocity[0] < 0:
-                self._velocity[0] = -self._velocity[0]
-
-        if self.get_location()[1] + self._radius >= self._engine.get_resolution()[1]:
-            if self._velocity[1] > 0:
-                self._velocity[1] = -self._velocity[1]
-
-        elif self.get_location()[1] - self._radius < 0:
-            if self._velocity[1] < 1:
-                self._velocity[1] = -self._velocity[1]
-
-    def bounce(self, collided_actor):
-        separation_vector = Helpers.normalize(self.calculate_circle_separation_vector(collided_actor))
-
-        self._velocity = self._velocity - 2 * np.dot(separation_vector, self._velocity) * separation_vector
-        collided_actor._velocity = collided_actor._velocity - 2 * np.dot(-separation_vector,
-                                                                         collided_actor._velocity) * -separation_vector
-
     def __deepcopy__(self, memodict={}):
         new_copy = SquareActor(self._engine, self._surface)
         new_copy._surface_rect = self._surface_rect.copy()
         new_copy._location = copy.deepcopy(self.location)
         new_copy.is_static = self.is_static
         return new_copy
+
+    def get_width(self) -> float:
+        return self._surface_rect.right - self._surface_rect.left
+
+    def get_height(self) -> float:
+        return self._surface_rect.bottom - self._surface_rect.top
+
+    def get_left(self) -> float:
+        return self.get_location()[0] - self.get_width() / 2
+
+    def get_right(self) -> float:
+        return self.get_location()[0] + self.get_width() / 2
+
+    def get_top(self) -> float:
+        return self.get_location()[1] - self.get_height() / 2
+
+    def get_bottom(self) -> float:
+        return self.get_location()[1] + self.get_height() / 2
