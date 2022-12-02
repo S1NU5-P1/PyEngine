@@ -18,6 +18,8 @@ class ImageMap(Actor, ABC):
         self.z = -100
 
     def LoadMap(self, path: str, tile_dict: dict[str, ImageActor], tile_x=32, tile_y=32):
+        self.remove_tiles()
+
         with open(path) as map_file:
             for line_number, line in enumerate(map_file.readlines()):
                 for character_number, character in enumerate(line):
@@ -30,6 +32,15 @@ class ImageMap(Actor, ABC):
                     new_tile.set_location(new_location)
                     self._tiles.append(new_tile)
                     self._engine.RegisterActor(new_tile)
+
+    def remove_tiles(self):
+        for tile in self._tiles:
+            try:
+                self._engine.get_actor_list().remove(tile)
+            except ValueError:
+                continue
+
+        self._tiles.clear()
 
     def Start(self):
         pass

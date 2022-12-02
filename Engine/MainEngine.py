@@ -18,6 +18,7 @@ class MainEngine:
         self._ActorList: list[Actor] = []
         self._camera_location = np.array(self._resolution) / 2.
         self._camera_scale = 1.
+        self.is_map_loaded_this_frame = False
 
         pygame.display.set_caption("PyEngine")
 
@@ -44,6 +45,9 @@ class MainEngine:
             self.screen.fill((0, 0, 0))
             for actor in self._ActorList:
                 actor.Update(seconds, delta_seconds, this_frame_events)
+                if self.is_map_loaded_this_frame:
+                    self.is_map_loaded_this_frame = False
+                    break
 
             fps_font = pygame.font.SysFont("", 24)
             fps_image = fps_font.render(f"fps: {round(1 / delta_seconds)}", True, (0., 255., 0.))

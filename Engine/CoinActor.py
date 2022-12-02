@@ -1,9 +1,10 @@
 import pygame
 
-from Engine.PlayerTwo import CirclePlayer
 from Engine.CircleActor import CircleActor
 from Engine.MainEngine import MainEngine
 from Engine.Player import Player
+from Engine.PlayerTwo import CirclePlayer
+from Engine.SceneManager import SceneManager
 
 
 class CoinActor(CircleActor):
@@ -18,6 +19,8 @@ class CoinActor(CircleActor):
 
         for another_actor in self.collided_actors_this_frame:
             if isinstance(another_actor, Player) or isinstance(another_actor, CirclePlayer):
-                print("Win!!!")
-
-
+                for actor in self._engine.get_actor_list():
+                    if isinstance(actor, SceneManager):
+                        actor.load_next_map()
+                        self.collided_actors_this_frame.clear()
+                        break
